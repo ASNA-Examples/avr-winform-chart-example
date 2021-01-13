@@ -1,9 +1,0 @@
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\bin\Debug\Charts.exe
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\bin\Debug\Charts.pdb
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\obj\Debug\Charts.vrprojAssemblyReference.cache
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\obj\Debug\Charts.Form1.resources
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\obj\Debug\Charts.Resources.resources
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\obj\Debug\Charts.vrproj.GenerateResource.cache
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\obj\Debug\Charts.vrproj.CoreCompileInputs.cache
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\obj\Debug\Charts.exe
-C:\Users\roger\Documents\Programming\AVR\Charts\Charts\obj\Debug\Charts.pdb

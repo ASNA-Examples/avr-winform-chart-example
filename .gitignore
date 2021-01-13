@@ -6,3 +6,7 @@ node_modules
 *.pdb
 *.cache
 *.suo
+[Oo]bj
+[Bb]in
+[Dd]ebug
+[Bb]uild/
