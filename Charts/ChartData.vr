@@ -1,0 +1,97 @@
+﻿Using System
+Using System.Text
+
+DclNamespace Charts
+
+BegClass ChartData Access(*Public)
+
+    DclDB DGDB DBName('*Public/DG NET Local') 
+
+    DclDiskFile Customer +
+            Type(*Input) + 
+            Org(*Indexed) + 
+            Prefix(Customer_) + 
+            File('examples/cmastnewl1') +
+            DB(DGDB) +
+            ImpOpen(*No)  
+
+    DclDiskFile Sales +
+            Type(*Update) + 
+            AddRec(*Yes) + 
+            Org(*Indexed) +
+            Prefix(Sales_) + 
+            File('examples/cmsales') +
+            RnmFmt(RSales) + 
+            DB(DGDB) +
+            ImpOpen(*No)  
+
+    DclArray Q1 Type(*Packed) Len(16,2) Dim(3) 
+    DclArray Q2 Type(*Packed) Len(16,2) Dim(3) 
+    DclArray Q3 Type(*Packed) Len(16,2) Dim(3) 
+    DclArray Q4 Type(*Packed) Len(16,2) Dim(3) 
+
+    DclAliasGroup Q1 Fmt(RSales) Flds(Sales_Jan) 
+    DclAliasGroup Q2 Fmt(RSales) Flds(Sales_Apr) 
+    DclAliasGroup Q3 Fmt(RSales) Flds(Sales_Jul) 
+    DclAliasGroup Q4 Fmt(RSales) Flds(Sales_Oct) 
+
+    DclConst THIS_YEAR 2021
+    DclConst LAST_YEAR 2020
+
+    BegFunc GetData Access(*Public) Type(CustomerSales)
+        DclSrParm CustomerNumber Type(*Packed) Len(9,0)
+
+        DclFld SalesResults Type(CustomerSales) New()
+
+        Connect DGDB
+        Open Customer
+        Open Sales
+
+        Chain Customer Key(CustomerNumber) 
+        If NOT Customer.IsFound
+            LeaveSr *Nothing 
+        EndIf 
+
+        Chain Sales Key(CustomerNumber, LAST_YEAR) 
+        If NOT Sales.IsFound
+            LeaveSr *Nothing 
+        EndIf 
+
+        SalesResults.ThisYearSales = *New Decimal[] {0,0,0,0}
+        SalesResults.LastYearSales = *New Decimal[] {0,0,0,0}
+
+        XFoot Arr(Q1) Result(SalesResults.LastYearSales[0])
+        XFoot Arr(Q2) Result(SalesResults.LastYearSales[1])
+        XFoot Arr(Q3) Result(SalesResults.LastYearSales[2])
+        XFoot Arr(Q4) Result(SalesResults.LastYearSales[3])
+
+        Chain Sales Key(CustomerNumber, THIS_YEAR) 
+        If NOT Sales.IsFound
+            LeaveSr *Nothing 
+        EndIf 
+
+        XFoot Arr(Q1) Result(SalesResults.ThisYearSales[0])
+        XFoot Arr(Q2) Result(SalesResults.ThisYearSales[1])
+        XFoot Arr(Q3) Result(SalesResults.ThisYearSales[2])
+        XFoot Arr(Q4) Result(SalesResults.ThisYearSales[3])
+
+        SalesResults.CustomerNumber = Customer_CMCustNo
+        SalesResults.CustomerName = Customer_CMName 
+        SalesResults.ThisYear = THIS_YEAR
+        SalesResults.LastYear = LAST_YEAR
+
+        Close *ALL
+        Disconnect DGDB  
+
+        LeaveSr SalesResults
+    EndFunc 
+EndClass
+
+BegClass CustomerSales 
+    DclProp CustomerNumber Type(*Integer4) Access(*Public) 
+    DclProp CustomerName Type(*String) Access(*Public) 
+    DclProp ThisYear Type(*Integer4) Access(*Public) 
+    DclProp LastYear Type(*Integer4) Access(*Public) 
+    DclProp ThisYearSales Type(*Packed) Len(16,2) Rank(1) Access(*Public) 
+    DclProp LastYearSales Type(*Packed) Len(16,2) Rank(1) Access(*Public) 
+EndClass

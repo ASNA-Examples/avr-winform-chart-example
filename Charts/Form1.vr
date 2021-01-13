@@ -1,0 +1,168 @@
+﻿Using System
+Using System.Collections
+Using System.ComponentModel
+Using System.Data
+Using System.Drawing
+Using System.Text
+Using System.Windows.Forms
+Using System.Windows.Forms.DataVisualization.Charting 
+Using System.Data.Linq
+
+
+BegClass Form1 Extends(System.Windows.Forms.Form) Access(*Public) Partial(*Yes)
+
+	/region Default Constructor
+	
+	BegConstructor Access(*Public)
+		//
+		// Required for Windows Form Designer support
+		//
+		InitializeComponent()
+
+		//
+		// TODO: Add any constructor code after InitializeComponent call
+		//
+	EndConstructor
+
+	/endregion
+
+    BegSr LoadSingleSeries
+        DclSrParm Labels Type(*String) Rank(1) 
+        DclSrParm Title1 Type(*String) 
+        DclSrParm Values1 Type(*Packed) Len(16,2) Rank(1)  
+        DclSrParm Title2 Type(*String) 
+        DclSrParm Values2 Type(*Packed) Len(16,2) Rank(1)
+
+        DclFld Index Type(*Integer4) 
+        DclFld chartSeries Type(Series) 
+        DclFld dp Type(DataPoint) 
+        DclFld MaxValue Type(*Packed) Len(16,2)
+
+        MaxValue = Math.Max(GetMaxSalesValue(Values1), GetMaxSalesValue(Values2))
+        // Set chart's max x axis to 5000 than max value of any one quarter.
+        chartMonthlySales.ChartAreas[0].AxisY.Maximum = MaxValue + 5000 
+
+        chartMonthlySales.Series.Clear()
+        chartMonthlySales.Titles.Clear()        
+        chartMonthlySales.Titles.Add('Sales Chart - This Year and Last Year')         
+
+        chartSeries = *New Series(Title1, Values1.Length) 
+        chartSeries.ChartType = SeriesChartType.Column
+        chartMonthlySales.Series.Add(chartSeries) 
+
+        chartSeries = *New Series(Title2, Values2.Length)         
+        chartSeries.ChartType = SeriesChartType.Column
+        chartMonthlySales.Series.Add(chartSeries) 
+
+        For Index(Index = 0) To(Values1.Length - 1) 
+            dp = *New DataPoint()
+            dp.AxisLabel = Labels[Index]
+            dp.YValues = *New Double[] {Values1[Index]}
+            chartMonthlySales.Series[Title1].Points.Add(dp) 
+
+            dp = *New DataPoint()
+            dp.AxisLabel = Labels[Index]
+            dp.YValues = *New Double[] {Values2[Index]}
+            chartMonthlySales.Series[Title2].Points.Add(dp) 
+        EndFor                        
+    EndSr
+
+    BegFunc GetMaxSalesValue Type(*Packed) Len(16,2) 
+        DclSrParm Values Type(*Packed) Len(16,2) Rank(1)  
+
+        DclFld MaxValue Type(*Packed) Len(16,2) 
+        DclFld Index Type(*Integer4) 
+
+        For Index(Index = 0) To(Values.Length - 1) 
+            MaxValue = Math.Max(MaxValue, Values[Index])
+        EndFor
+
+        LeaveSr MaxValue
+    EndFunc 
+
+	BegSr Form1_Load Access(*Private) Event(*this.Load)
+		DclSrParm sender *Object
+		DclSrParm e System.EventArgs
+
+        labelThisYearSales.Text = String.Empty
+        labelLastYearSales.Text = String.Empty
+        labelCustomerName.Text = String.Empty 
+        SetSalesResultsHeading()
+	EndSr
+
+	BegSr buttonRefreshChart_Click Access(*Private) Event(*this.buttonRefreshChart.Click)
+		DclSrParm sender Type(*Object)
+		DclSrParm e Type(System.EventArgs)
+
+        DclFld CustomerNumber Type(*Integer4) 
+        DclFld cd Type(ChartData) New() 
+        DclFld SalesResults Type(CustomerSales) 
+        DclArray Labels Type(*String) Rank(1) 
+
+        Labels = *New *String[] {'Q1', 'Q2', 'Q3', 'Q4'}
+
+        CustomerNumber = textboxCustomerNumber.Text
+
+        SalesResults = cd.GetData(CustomerNumber) 
+        If SalesResults = *Nothing 
+            MsgBox 'There isn''t a customer with that number'
+            textboxCustomerNumber.Text = String.Empty
+            textboxCustomerNumber.Focus()
+            LeaveSr 
+        EndIf 
+
+        LoadSingleSeries(Labels, +
+                         SalesResults.ThisYear.ToString(), +
+                         SalesResults.ThisYearSales, +
+                         SalesResults.LastYear.ToString(), +
+                         SalesResults.LastYearSales)
+
+        UpdateUI(SalesResults)
+        chartMonthlySales.Visible = *True
+	EndSr
+
+    BegSr SetSalesResultsHeading
+        DclFld sb Type(StringBuilder) New() 
+
+        sb.Append(String.Format('{0,16}', ' '))
+        sb.Append(String.Format('{0,16}', 'Q1'))
+        sb.Append(String.Format('{0,16}', 'Q2'))
+        sb.Append(String.Format('{0,16}', 'Q3'))
+        sb.Append(String.Format('{0,16}', 'Q4'))
+        sb.Append(String.Format('{0,16}', 'Total'))
+
+
+        labelSalesResultHeading.Text = sb.ToString()
+    EndSr
+
+    BegSr UpdateUI
+        DclSrParm SalesResults Type(CustomerSales) 
+
+        labelCustomerName.Text = SalesResults.CustomerName
+
+        labelThisYearSales.Text = RefreshYearlySales(SalesResults.ThisYearSales, SalesResults.ThisYear.ToString())
+        labelLastYearSales.Text = RefreshYearlySales(SalesResults.LastYearSales, SalesResults.LastYear.ToString())
+    EndSr
+	
+    BegFunc RefreshYearlySales Type(*String) 
+        DclSrParm Sales Type(*Packed) Len(16,2) Rank(1) 
+        DclSrParm SalesLabel Type(*String) 
+
+        DclFld sb Type(StringBuilder) New() 
+        DclFld Total Type(*Packed) Len(16,2) 
+        DclFld Index Type(*Integer4) 
+
+        sb.Clear()
+        Total = 0
+        sb.Append(String.Format('{0,16}', SalesLabel)) 
+        For Index(Index = 0) To(Sales.Length - 1) 
+            sb.Append(String.Format('{0,16}', (Math.Round(Sales[Index], 0).ToString('#,000'))))
+            Total += Sales[Index]
+        EndFor 
+
+        sb.Append(String.Format('{0,16}', (Math.Round(Total, 0).ToString('#,000'))))
+
+        LeaveSr sb.ToString() 
+    EndFunc
+
+EndClass
