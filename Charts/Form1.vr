@@ -8,7 +8,6 @@ Using System.Windows.Forms
 Using System.Windows.Forms.DataVisualization.Charting 
 Using System.Data.Linq
 
-
 BegClass Form1 Extends(System.Windows.Forms.Form) Access(*Public) Partial(*Yes)
 
 	/region Default Constructor
@@ -26,7 +25,48 @@ BegClass Form1 Extends(System.Windows.Forms.Form) Access(*Public) Partial(*Yes)
 
 	/endregion
 
-    BegSr LoadSingleSeries
+	BegSr Form1_Load Access(*Private) Event(*this.Load)
+		DclSrParm sender *Object
+		DclSrParm e System.EventArgs
+
+        labelThisYearSales.Text = String.Empty
+        labelLastYearSales.Text = String.Empty
+        labelCustomerName.Text = String.Empty 
+        labelErrorMessage.Text = String.Empty
+        SetSalesResultsHeading()
+	EndSr
+
+	BegSr buttonRefreshChart_Click Access(*Private) Event(*this.buttonRefreshChart.Click)
+		DclSrParm sender Type(*Object)
+		DclSrParm e Type(System.EventArgs)
+
+        RefreshChart()
+    EndSr 
+
+	BegSr linklabelSaveImage_LinkClicked Access(*Private) Event(*this.linklabelSaveImage.LinkClicked)
+		DclSrParm sender Type(*Object)
+		DclSrParm e Type(System.Windows.Forms.LinkLabelLinkClickedEventArgs)
+
+        DclFld TargetImageName Type(*String) 
+
+        TargetImageName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        TargetImageName += String.Format('\chartimage-{0}.png', textboxCustomerNumber.Text.Trim())
+
+        chartMonthlySales.SaveImage(TargetImageName, ChartImageFormat.Png)
+	EndSr
+	
+	BegSr textboxCustomerNumber_KeyDown Access(*Private) Event(*this.textboxCustomerNumber.KeyDown)
+		DclSrParm sender Type(*Object)
+		DclSrParm e Type(System.Windows.Forms.KeyEventArgs)
+
+        If e.KeyCode = Keys.Enter 
+            e.Handled = *True
+            e.SuppressKeyPress = *True 
+            RefreshChart()
+        EndIf         
+	EndSr
+
+    BegSr LoadChartData
         DclSrParm Labels Type(*String) Rank(1) 
         DclSrParm Title1 Type(*String) 
         DclSrParm Values1 Type(*Packed) Len(16,2) Rank(1)  
@@ -79,21 +119,8 @@ BegClass Form1 Extends(System.Windows.Forms.Form) Access(*Public) Partial(*Yes)
 
         LeaveSr MaxValue
     EndFunc 
-
-	BegSr Form1_Load Access(*Private) Event(*this.Load)
-		DclSrParm sender *Object
-		DclSrParm e System.EventArgs
-
-        labelThisYearSales.Text = String.Empty
-        labelLastYearSales.Text = String.Empty
-        labelCustomerName.Text = String.Empty 
-        SetSalesResultsHeading()
-	EndSr
-
-	BegSr buttonRefreshChart_Click Access(*Private) Event(*this.buttonRefreshChart.Click)
-		DclSrParm sender Type(*Object)
-		DclSrParm e Type(System.EventArgs)
-
+   
+    BegSr RefreshChart
         DclFld CustomerNumber Type(*Integer4) 
         DclFld cd Type(ChartData) New() 
         DclFld SalesResults Type(CustomerSales) 
@@ -101,37 +128,40 @@ BegClass Form1 Extends(System.Windows.Forms.Form) Access(*Public) Partial(*Yes)
 
         Labels = *New *String[] {'Q1', 'Q2', 'Q3', 'Q4'}
 
+        labelErrorMessage.Visible = *False
+
         CustomerNumber = textboxCustomerNumber.Text
 
         SalesResults = cd.GetData(CustomerNumber) 
         If SalesResults = *Nothing 
-            MsgBox 'There isn''t a customer with that number'
+            labelErrorMessage.Text = String.Format('There isn''t sale data for customer number {0}', CustomerNumber) 
+            panelChartContainer.Visible = *False
+            labelErrorMessage.Visible = *True 
             textboxCustomerNumber.Text = String.Empty
             textboxCustomerNumber.Focus()
             LeaveSr 
         EndIf 
 
-        LoadSingleSeries(Labels, +
-                         SalesResults.ThisYear.ToString(), +
-                         SalesResults.ThisYearSales, +
-                         SalesResults.LastYear.ToString(), +
-                         SalesResults.LastYearSales)
+        LoadChartData(Labels, +
+                      SalesResults.ThisYear.ToString(), +
+                      SalesResults.ThisYearSales, +
+                      SalesResults.LastYear.ToString(), +
+                      SalesResults.LastYearSales)
 
         UpdateUI(SalesResults)
-        chartMonthlySales.Visible = *True
+        panelChartContainer.Visible = *True
 	EndSr
 
     BegSr SetSalesResultsHeading
         DclFld sb Type(StringBuilder) New() 
 
-        sb.Append(String.Format('{0,16}', ' '))
+        sb.Append(String.Format('{0,10}', ' '))
         sb.Append(String.Format('{0,16}', 'Q1'))
         sb.Append(String.Format('{0,16}', 'Q2'))
         sb.Append(String.Format('{0,16}', 'Q3'))
         sb.Append(String.Format('{0,16}', 'Q4'))
         sb.Append(String.Format('{0,16}', 'Total'))
-
-
+        
         labelSalesResultHeading.Text = sb.ToString()
     EndSr
 
@@ -139,7 +169,6 @@ BegClass Form1 Extends(System.Windows.Forms.Form) Access(*Public) Partial(*Yes)
         DclSrParm SalesResults Type(CustomerSales) 
 
         labelCustomerName.Text = SalesResults.CustomerName
-
         labelThisYearSales.Text = RefreshYearlySales(SalesResults.ThisYearSales, SalesResults.ThisYear.ToString())
         labelLastYearSales.Text = RefreshYearlySales(SalesResults.LastYearSales, SalesResults.LastYear.ToString())
     EndSr
@@ -154,7 +183,7 @@ BegClass Form1 Extends(System.Windows.Forms.Form) Access(*Public) Partial(*Yes)
 
         sb.Clear()
         Total = 0
-        sb.Append(String.Format('{0,16}', SalesLabel)) 
+        sb.Append(String.Format('{0,10}', SalesLabel)) 
         For Index(Index = 0) To(Sales.Length - 1) 
             sb.Append(String.Format('{0,16}', (Math.Round(Sales[Index], 0).ToString('#,000'))))
             Total += Sales[Index]
@@ -164,5 +193,5 @@ BegClass Form1 Extends(System.Windows.Forms.Form) Access(*Public) Partial(*Yes)
 
         LeaveSr sb.ToString() 
     EndFunc
-
+	
 EndClass

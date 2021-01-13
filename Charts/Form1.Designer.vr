@@ -6,33 +6,20 @@
 		DclFld chartArea1 Type(System.Windows.Forms.DataVisualization.Charting.ChartArea) New(*Dft)
 		DclFld legend1 Type(System.Windows.Forms.DataVisualization.Charting.Legend) New(*Dft)
 		DclFld series1 Type(System.Windows.Forms.DataVisualization.Charting.Series) New(*Dft)
-		*this.chartMonthlySales = *new System.Windows.Forms.DataVisualization.Charting.Chart()
 		*this.textboxCustomerNumber = *new System.Windows.Forms.TextBox()
 		*this.buttonRefreshChart = *new System.Windows.Forms.Button()
-		*this.labelThisYearSales = *new System.Windows.Forms.Label()
-		*this.labelLastYearSales = *new System.Windows.Forms.Label()
-		*this.labelSalesResultHeading = *new System.Windows.Forms.Label()
-		*this.labelCustomerName = *new System.Windows.Forms.Label()
 		*this.label1 = *new System.Windows.Forms.Label()
+		*this.panelChartContainer = *new System.Windows.Forms.Panel()
+		*this.linklabelSaveImage = *new System.Windows.Forms.LinkLabel()
+		*this.labelCustomerName = *new System.Windows.Forms.Label()
+		*this.labelSalesResultHeading = *new System.Windows.Forms.Label()
+		*this.labelLastYearSales = *new System.Windows.Forms.Label()
+		*this.labelThisYearSales = *new System.Windows.Forms.Label()
+		*this.chartMonthlySales = *new System.Windows.Forms.DataVisualization.Charting.Chart()
+		*this.labelErrorMessage = *new System.Windows.Forms.Label()
+		*this.panelChartContainer.SuspendLayout()
 		(*this.chartMonthlySales *As System.ComponentModel.ISupportInitialize).BeginInit()
 		*this.SuspendLayout()
-		//
-		//chartMonthlySales
-		//
-		chartArea1.Name = "ChartArea1"
-		*this.chartMonthlySales.ChartAreas.Add(chartArea1)
-		legend1.Name = "Legend1"
-		*this.chartMonthlySales.Legends.Add(legend1)
-		*this.chartMonthlySales.Location = *new System.Drawing.Point(115I, 363I)
-		*this.chartMonthlySales.Name = "chartMonthlySales"
-		series1.ChartArea = "ChartArea1"
-		series1.Legend = "Legend1"
-		series1.Name = "Series1"
-		*this.chartMonthlySales.Series.Add(series1)
-		*this.chartMonthlySales.Size = *new System.Drawing.Size(955I, 655I)
-		*this.chartMonthlySales.TabIndex = 0I
-		*this.chartMonthlySales.Text = "chart1"
-		*this.chartMonthlySales.Visible = *False
 		//
 		//textboxCustomerNumber
 		//
@@ -50,46 +37,6 @@
 		*this.buttonRefreshChart.Text = "Refresh chart"
 		*this.buttonRefreshChart.UseVisualStyleBackColor = *True
 		//
-		//labelThisYearSales
-		//
-		*this.labelThisYearSales.AutoSize = *True
-		*this.labelThisYearSales.Font = *new System.Drawing.Font("Consolas", 8, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
-		*this.labelThisYearSales.Location = *new System.Drawing.Point(119I, 278I)
-		*this.labelThisYearSales.Name = "labelThisYearSales"
-		*this.labelThisYearSales.Size = *new System.Drawing.Size(63I, 19I)
-		*this.labelThisYearSales.TabIndex = 3I
-		*this.labelThisYearSales.Text = "label1"
-		//
-		//labelLastYearSales
-		//
-		*this.labelLastYearSales.AutoSize = *True
-		*this.labelLastYearSales.Font = *new System.Drawing.Font("Consolas", 8, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
-		*this.labelLastYearSales.Location = *new System.Drawing.Point(119I, 312I)
-		*this.labelLastYearSales.Name = "labelLastYearSales"
-		*this.labelLastYearSales.Size = *new System.Drawing.Size(63I, 19I)
-		*this.labelLastYearSales.TabIndex = 6I
-		*this.labelLastYearSales.Text = "label1"
-		//
-		//labelSalesResultHeading
-		//
-		*this.labelSalesResultHeading.AutoSize = *True
-		*this.labelSalesResultHeading.Font = *new System.Drawing.Font("Consolas", 8, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
-		*this.labelSalesResultHeading.Location = *new System.Drawing.Point(119I, 243I)
-		*this.labelSalesResultHeading.Name = "labelSalesResultHeading"
-		*this.labelSalesResultHeading.Size = *new System.Drawing.Size(63I, 19I)
-		*this.labelSalesResultHeading.TabIndex = 7I
-		*this.labelSalesResultHeading.Text = "label1"
-		//
-		//labelCustomerName
-		//
-		*this.labelCustomerName.AutoSize = *True
-		*this.labelCustomerName.Font = *new System.Drawing.Font("Consolas", 12, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
-		*this.labelCustomerName.Location = *new System.Drawing.Point(119I, 189I)
-		*this.labelCustomerName.Name = "labelCustomerName"
-		*this.labelCustomerName.Size = *new System.Drawing.Size(90I, 28I)
-		*this.labelCustomerName.TabIndex = 8I
-		*this.labelCustomerName.Text = "label1"
-		//
 		//label1
 		//
 		*this.label1.AutoSize = *True
@@ -99,34 +46,129 @@
 		*this.label1.TabIndex = 9I
 		*this.label1.Text = "Customer Number"
 		//
+		//panelChartContainer
+		//
+		*this.panelChartContainer.Controls.Add(*this.linklabelSaveImage)
+		*this.panelChartContainer.Controls.Add(*this.labelCustomerName)
+		*this.panelChartContainer.Controls.Add(*this.labelSalesResultHeading)
+		*this.panelChartContainer.Controls.Add(*this.labelLastYearSales)
+		*this.panelChartContainer.Controls.Add(*this.labelThisYearSales)
+		*this.panelChartContainer.Controls.Add(*this.chartMonthlySales)
+		*this.panelChartContainer.Location = *new System.Drawing.Point(99I, 156I)
+		*this.panelChartContainer.Name = "panelChartContainer"
+		*this.panelChartContainer.Size = *new System.Drawing.Size(995I, 976I)
+		*this.panelChartContainer.TabIndex = 10I
+		*this.panelChartContainer.Visible = *False
+		//
+		//linklabelSaveImage
+		//
+		*this.linklabelSaveImage.AutoSize = *True
+		*this.linklabelSaveImage.Font = *new System.Drawing.Font("Microsoft Sans Serif", 10, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
+		*this.linklabelSaveImage.LinkColor = System.Drawing.Color.Black
+		*this.linklabelSaveImage.Location = *new System.Drawing.Point(15I, 900I)
+		*this.linklabelSaveImage.Name = "linklabelSaveImage"
+		*this.linklabelSaveImage.Size = *new System.Drawing.Size(164I, 25I)
+		*this.linklabelSaveImage.TabIndex = 14I
+		*this.linklabelSaveImage.TabStop = *True
+		*this.linklabelSaveImage.Text = "Save chart image"
+		//
+		//labelCustomerName
+		//
+		*this.labelCustomerName.AutoSize = *True
+		*this.labelCustomerName.Font = *new System.Drawing.Font("Consolas", 12, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
+		*this.labelCustomerName.Location = *new System.Drawing.Point(24I, 19I)
+		*this.labelCustomerName.Name = "labelCustomerName"
+		*this.labelCustomerName.Size = *new System.Drawing.Size(90I, 28I)
+		*this.labelCustomerName.TabIndex = 13I
+		*this.labelCustomerName.Text = "label1"
+		//
+		//labelSalesResultHeading
+		//
+		*this.labelSalesResultHeading.AutoSize = *True
+		*this.labelSalesResultHeading.Font = *new System.Drawing.Font("Consolas", 10, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
+		*this.labelSalesResultHeading.Location = *new System.Drawing.Point(29I, 73I)
+		*this.labelSalesResultHeading.Name = "labelSalesResultHeading"
+		*this.labelSalesResultHeading.Size = *new System.Drawing.Size(76I, 23I)
+		*this.labelSalesResultHeading.TabIndex = 12I
+		*this.labelSalesResultHeading.Text = "label1"
+		//
+		//labelLastYearSales
+		//
+		*this.labelLastYearSales.AutoSize = *True
+		*this.labelLastYearSales.Font = *new System.Drawing.Font("Consolas", 10, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
+		*this.labelLastYearSales.Location = *new System.Drawing.Point(29I, 142I)
+		*this.labelLastYearSales.Name = "labelLastYearSales"
+		*this.labelLastYearSales.Size = *new System.Drawing.Size(76I, 23I)
+		*this.labelLastYearSales.TabIndex = 11I
+		*this.labelLastYearSales.Text = "label1"
+		//
+		//labelThisYearSales
+		//
+		*this.labelThisYearSales.AutoSize = *True
+		*this.labelThisYearSales.Font = *new System.Drawing.Font("Consolas", 10, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, (0 *As System.Byte))
+		*this.labelThisYearSales.Location = *new System.Drawing.Point(29I, 108I)
+		*this.labelThisYearSales.Name = "labelThisYearSales"
+		*this.labelThisYearSales.Size = *new System.Drawing.Size(76I, 23I)
+		*this.labelThisYearSales.TabIndex = 10I
+		*this.labelThisYearSales.Text = "label1"
+		//
+		//chartMonthlySales
+		//
+		chartArea1.Name = "ChartArea1"
+		*this.chartMonthlySales.ChartAreas.Add(chartArea1)
+		legend1.Name = "Legend1"
+		*this.chartMonthlySales.Legends.Add(legend1)
+		*this.chartMonthlySales.Location = *new System.Drawing.Point(20I, 193I)
+		*this.chartMonthlySales.Name = "chartMonthlySales"
+		series1.ChartArea = "ChartArea1"
+		series1.Legend = "Legend1"
+		series1.Name = "Series1"
+		*this.chartMonthlySales.Series.Add(series1)
+		*this.chartMonthlySales.Size = *new System.Drawing.Size(955I, 655I)
+		*this.chartMonthlySales.TabIndex = 9I
+		*this.chartMonthlySales.Text = "chart1"
+		//
+		//labelErrorMessage
+		//
+		*this.labelErrorMessage.AutoSize = *True
+		*this.labelErrorMessage.ForeColor = System.Drawing.Color.Red
+		*this.labelErrorMessage.Location = *new System.Drawing.Point(115I, 103I)
+		*this.labelErrorMessage.Name = "labelErrorMessage"
+		*this.labelErrorMessage.Size = *new System.Drawing.Size(142I, 20I)
+		*this.labelErrorMessage.TabIndex = 11I
+		*this.labelErrorMessage.Text = "labelErrorMessage"
+		*this.labelErrorMessage.Visible = *False
+		//
 		//Form1
 		//
 		*this.AutoScaleDimensions = *new System.Drawing.SizeF(144, 144)
 		*this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
-		*this.ClientSize = *new System.Drawing.Size(1180I, 1111I)
+		*this.ClientSize = *new System.Drawing.Size(1184I, 1232I)
+		*this.Controls.Add(*this.labelErrorMessage)
+		*this.Controls.Add(*this.panelChartContainer)
 		*this.Controls.Add(*this.label1)
-		*this.Controls.Add(*this.labelCustomerName)
-		*this.Controls.Add(*this.labelSalesResultHeading)
-		*this.Controls.Add(*this.labelLastYearSales)
-		*this.Controls.Add(*this.labelThisYearSales)
 		*this.Controls.Add(*this.buttonRefreshChart)
 		*this.Controls.Add(*this.textboxCustomerNumber)
-		*this.Controls.Add(*this.chartMonthlySales)
 		*this.Name = "Form1"
 		*this.Text = "ASNA Visual RPG Chart Example"
+		*this.panelChartContainer.ResumeLayout(*False)
+		*this.panelChartContainer.PerformLayout()
 		(*this.chartMonthlySales *As System.ComponentModel.ISupportInitialize).EndInit()
 		*this.ResumeLayout(*False)
 		*this.PerformLayout()
 	EndSr
 	
-	DclFld chartMonthlySales Type(System.Windows.Forms.DataVisualization.Charting.Chart) Access(*Private) WithEvents(*Yes)
 	DclFld textboxCustomerNumber Type(System.Windows.Forms.TextBox) Access(*Private) WithEvents(*Yes)
 	DclFld buttonRefreshChart Type(System.Windows.Forms.Button) Access(*Private) WithEvents(*Yes)
-	DclFld labelThisYearSales Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
-	DclFld labelLastYearSales Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
-	DclFld labelSalesResultHeading Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
-	DclFld labelCustomerName Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
 	DclFld label1 Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
+	DclFld linklabelSaveImage Type(System.Windows.Forms.LinkLabel) Access(*Private) WithEvents(*Yes)
+	DclFld labelCustomerName Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
+	DclFld labelSalesResultHeading Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
+	DclFld labelLastYearSales Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
+	DclFld labelThisYearSales Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
+	DclFld chartMonthlySales Type(System.Windows.Forms.DataVisualization.Charting.Chart) Access(*Private) WithEvents(*Yes)
+	DclFld panelChartContainer Type(System.Windows.Forms.Panel) Access(*Private) WithEvents(*Yes)
+	DclFld labelErrorMessage Type(System.Windows.Forms.Label) Access(*Private) WithEvents(*Yes)
 	//Required by the Windows Form Designer
 	DclFld components Type(System.ComponentModel.IContainer) Inz(*Nothing)
 	
